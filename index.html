@@ -11,8 +11,8 @@
             height: 100%;
             width: 100%;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background-color: #000;
-            overflow: hidden;
+            background-color: #050505;
+            overflow-x: hidden;
         }
 
         .bg-container {
@@ -22,73 +22,79 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            background-image: url('https://raw.githubusercontent.com/MeierGood/meierstudios.github.io/refs/heads/main/forweb.bmp');
+            background-image: url('./forweb.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            filter: brightness(0.6);
         }
 
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4); 
+        .content-wrapper {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            height: 100vh;
             text-align: center;
-            padding: 20px;
+            color: #ffffff;
+            padding: 0 20px;
+            box-sizing: border-box;
         }
 
-        .content-box {
-            max-width: 800px;
-            animation: fadeIn 2s ease-out;
-        }
-
-        h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            letter-spacing: 2px;
+        .main-title {
+            font-size: 5rem;
+            font-weight: 800;
+            letter-spacing: 4px;
             margin-bottom: 20px;
-            color: #fff;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            background: linear-gradient(90deg, #ff0000, #ffcc00);
+            background: linear-gradient(
+                90deg, 
+                #a18cd1 0%, 
+                #fbc2eb 25%, 
+                #8fd3f4 50%, 
+                #fbc2eb 75%, 
+                #a18cd1 100%
+            );
+            background-size: 200% auto;
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
+            animation: softFlow 6s linear infinite;
+            text-shadow: 0 0 20px rgba(161, 140, 209, 0.3);
         }
 
-        p {
-            font-size: 1.2rem;
+        .sub-title {
+            font-size: 1.3rem;
+            font-weight: 300;
             line-height: 1.6;
             color: rgba(255, 255, 255, 0.9);
-            font-weight: 300;
+            max-width: 800px;
             letter-spacing: 0.5px;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.8);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes softFlow {
+            to {
+                background-position: 200% center;
+            }
         }
 
         @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            p { font-size: 1rem; }
+            .main-title {
+                font-size: 3rem;
+            }
+            .sub-title {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-
     <div class="bg-container"></div>
-
-    <div class="overlay">
-        <div class="content-box">
-            <h1>MEIER STUDIOS</h1>
-            <p>The official website of Meier Studios is currently under construction,<br>and exciting content will be presented soon.</p>
-        </div>
+    <div class="content-wrapper">
+        <h1 class="main-title">MEIER STUDIOS</h1>
+        <p class="sub-title">
+            The official website of Meier Studios is currently under construction,<br>
+            and exciting content will be presented soon.
+        </p>
     </div>
-
 </body>
 </html>
