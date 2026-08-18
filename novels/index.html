@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novels · Meier Studios</title>
+    <link rel="icon" href="https://www.meierstudios.com/forweb.ico">
+    <style>
+        :root {
+            --bg-color: #f5f5f7;
+            --card-radius: 20px;
+            --text-dark: #1d1d1f;
+            --text-muted: #6e6e73;
+            --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 18px 40px rgba(0, 0, 0, 0.12);
+            --sidebar-width: 340px;
+            --sidebar-bg:#0f0f14;
+            --btn-base-bg:rgba(255,255,255,0.08);
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x:hidden;
+        }
+        header {
+            padding: 12px 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap:24px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index:99;
+            background-color: #000000;
+        }
+        .header‑brand{
+            display:flex;
+            align-items:center;
+            gap:24px;
+            margin-left:0;
+        }
+        .header-right-group{
+            display:flex;
+            align-items:center;
+            gap:20px;
+        }
+        .logo-img {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+        h1 {
+            font-size: 34px;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: -0.5px;
+            color:#ffffff;
+        }
+        .search-toggle-wrap{
+            position:relative;
+            height:42px;
+            display:flex;
+            align-items:center;
+        }
+        .search-circle-btn{
+            width:42px;
+            height:42px;
+            border-radius:50%;
+            border:none;
+            background-color:var(--btn-base-bg);
+            cursor:pointer;
+            position:relative;
+            z-index:2;
+            transition: transform 0.28s ease, background 0.22s;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+        .search-circle-btn:hover{
+            background-color:rgba(255,255,255,0.16);
+        }
+        .search-icon-svg{
+            width:18px;
+            height:18px;
+            fill:none;
+            stroke:#ffffff;
+            stroke-opacity:0.7;
+            stroke-width:2;
+            stroke-linecap:round;
+            stroke-linejoin:round;
+        }
+        .search-input-shell{
+            position:absolute;
+            right:0;
+            top:0;
+            height:42px;
+            width:42px;
+            border-radius:999px;
+            background-color:rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            transition: width 0.28s ease, background 0.22s, border-color 0.22s;
+            overflow:hidden;
+            display:flex;
+            align-items:center;
+        }
+        .search-input-shell input{
+            border:none;
+            outline:none;
+            background:transparent;
+            color:#fff;
+            font-size:15px;
+            width:100%;
+            height:100%;
+            padding:0 16px 0 50px;
+            opacity:0;
+            transition: opacity 0.2s ease;
+        }
+        .search-input-shell input::placeholder{
+            color:rgba(255,255,255,0.65);
+        }
+        .search-toggle-wrap.open .search-circle-btn{
+            transform: translateX(-278px);
+        }
+        .search-toggle-wrap.open .search-input-shell{
+            width:320px;
+            background-color:rgba(255,255,255,0.12);
+            border-color:rgba(255,255,255,0.3);
+        }
+        .search-toggle-wrap.open .search-input-shell input{
+            opacity:1;
+        }
+        .search-dropdown {
+            position:absolute;
+            top:calc(100% + 8px);
+            right:0;
+            width:320px;
+            background-color:#1c1c22;
+            border-radius:16px;
+            overflow:hidden;
+            display:none;
+            min-height:60px;
+            z-index:10;
+        }
+        .search-item{
+            padding:12px 18px;
+            color:#fff;
+            cursor:pointer;
+        }
+        .search-item:hover{
+            background-color:rgba(255,255,255,0.08);
+        }
+        .search-noresult{
+            padding:20px;
+            text-align:center;
+            color:#999;
+        }
+        .lang-container {
+            position: relative;
+            z-index: 9999;
+        }
+        .earth-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: var(--btn-base-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border: none;
+            transition: 0.22s ease;
+        }
+        .earth-btn:hover {
+            background-color: rgba(255,255,255,0.16);
+        }
+        .earth-btn:active {
+            transform: scale(0.92);
+        }
+        .globe-icon {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: #ffffff;
+            stroke-opacity:0.7;
+            stroke-width: 2.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .lang-dropdown {
+            position: absolute;
+            top: 54px;
+            right: 0;
+            width: 210px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.20);
+            overflow: hidden;
+            transform-origin: top right;
+            opacity: 0;
+            transform: scale(0.82);
+            pointer-events: none;
+        }
+        .lang-dropdown.open {
+            pointer-events: auto;
+            animation: popIn 0.36s ease forwards;
+        }
+        .lang-dropdown.close-animation {
+            animation: popOut 0.32s ease forwards;
+        }
+        .lang-menu-header {
+            padding: 14px 18px;
+            font-size: 14px;
+            color: #666666;
+            border-bottom: 1px solid #eeeeee;
+        }
+        .lang-scroll-wrapper {
+            max-height: 320px;
+            overflow-y: auto;
+        }
+        .lang-option {
+            width: 100%;
+            padding: 13px 18px;
+            border: 0;
+            background-color: #ffffff;
+            text-align: left;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background-color 0.15s;
+        }
+        .lang-option:hover {
+            background-color: #f4f4f4;
+        }
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.82);
+            }
+            62% {
+                transform: scale(1.09);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        @keyframes popOut {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            40% {
+                transform: scale(1.04);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.82);
+            }
+        }
+        .menu-btn{
+            width:44px;
+            height:44px;
+            border:none;
+            border-radius: 50%;
+            background-color:var(--btn-base-bg);
+            cursor:pointer;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            gap:4px;
+            padding:0;
+            transition:none !important;
+        }
+        .menu-btn:hover{
+            background-color: rgba(255, 255, 255, 0.12);
+        }
+        .menu-btn span{
+            width:22px;
+            height:2px;
+            background-color:#ffffff;
+            border-radius: 99px;
+        }
+        .sidebar‑overlay{
+            position:fixed;
+            inset:0;
+            background-color:rgba(0,0,0,0.55);
+            z-index:100;
+            opacity:0;
+            visibility:hidden;
+            transition:0.3s ease;
+        }
+        .sidebar‑overlay.active{
+            opacity:1;
+            visibility:visible;
+        }
+        .sidebar{
+            position:fixed;
+            top:0;
+            left:0;
+            width:var(--sidebar-width);
+            height:100vh;
+            background-color:var(--sidebar-bg);
+            z-index:101;
+            transform:translateX(-100%);
+            transition:transform 0.38s cubic-bezier(.2,0,.2,1);
+            padding:40px 36px;
+            overflow-y:auto;
+        }
+        .sidebar.active{
+            transform:translateX(0);
+        }
+        .sidebar-close{
+            position:absolute;
+            top:28px;
+            right:28px;
+            width:36px;
+            height:36px;
+            background:transparent;
+            border:none;
+            color:#fff;
+            font-size:26px;
+            cursor:pointer;
+        }
+        .sidebar-logo{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            margin-bottom:50px;
+        }
+        .sidebar-logo img{
+            width:38px;
+            height:38px;
+            border-radius:8px;
+        }
+        .sidebar-logo-text{
+            color:#ffffff;
+            font-size:22px;
+            font-weight:700;
+        }
+        .sidebar-nav{
+            list-style:none;
+            padding:0;
+            margin:0;
+        }
+        .sidebar-nav li{
+            margin-bottom:22px;
+        }
+        .sidebar-nav a{
+            color:#cccccc;
+            text-decoration:none;
+            font-size:20px;
+            font-weight:500;
+            display:block;
+            padding:8px 0;
+            transition:color 0.25s ease;
+        }
+        .sidebar-nav a:hover{
+            color:#ffffff;
+        }
+        main {
+            width: 100%;
+            margin-top: 66px;
+        }
+        .hero-banner {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .hero-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+        .hero-banner:hover .hero-bg {
+            transform: scale(1.04);
+        }
+        .hero-gradient-mask {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.82), transparent);
+            transition: height 0.35s ease-out;
+        }
+        .hero-banner:hover .hero-gradient-mask {
+            height: 50%;
+        }
+        .hero-tag {
+            position: absolute;
+            bottom:24px;
+            right:24px;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #fff;
+            background: rgba(255,255,255,.18);
+            backdrop-filter: blur(12px);
+            padding: 7px 18px;
+            border-radius: 999px;
+            letter-spacing: 1.2px;
+            z-index: 2;
+        }
+        .hero-text-wrap {
+            position: absolute;
+            bottom: 0;
+            left: 24px;
+            transition: transform 0.35s ease-out;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .hero-banner:hover .hero-text-wrap {
+            transform: translateY(-56px);
+        }
+        .hero-title,
+        .hero-desc {
+            color: #ffffff;
+            opacity: 0;
+            transition: opacity 0.35s ease-out;
+        }
+        .hero-title {
+            font-size: 52px;
+            font-weight: 800;
+            margin: 0 0 12px;
+            text-shadow: 0 2px 18px rgba(0,0,0,.25);
+            letter-spacing: 2px;
+        }
+        .hero-desc {
+            font-size: 17px;
+            margin: 0;
+            max-width: 100%;
+            white-space: nowrap;
+            line-height: 1.55;
+            letter-spacing: 1px;
+        }
+        .hero-banner:hover .hero-title,
+        .hero-banner:hover .hero-desc {
+            opacity: 1;
+        }
+        .scroll-container {
+            display: flex;
+            gap: 28px;
+            padding: 60px 48px 48px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+        .card {
+            flex: 0 0 210px;
+            height: 290px;
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            position: relative;
+            box-shadow: var(--shadow-soft);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.35s cubic-bezier(0.2, 0, 0.2, 1);
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+        .card-img-wrapper {
+            width: 100%;
+            height: 100%;
+        }
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .card:hover .card-img {
+            transform: scale(1.08);
+        }
+        .card-overlay {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.88), transparent);
+            transition: height 0.32s ease-out;
+        }
+        .card:hover .card-overlay{
+            height: 120px;
+        }
+        .card-content {
+            position: absolute;
+            bottom: 18px;
+            left: 18px;
+            right: 18px;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.32s ease-out;
+        }
+        .card:hover .card-content{
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 6px;
+            color: #ffffff;
+            line-height: 1.35;
+        }
+        .card-sub {
+            font-size: 13px;
+            margin: 0;
+            color: rgba(255,255,255,0.75);
+        }
+        footer {
+            text-align: center;
+            padding: 48px 20px 32px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        @media (max-width:768px){
+            header{
+                padding:10px 20px;
+            }
+            .search-toggle-wrap.open .search-circle-btn{
+                transform: translateX(-170px);
+            }
+            .search-toggle-wrap.open .search-input-shell{
+                width:200px;
+            }
+            .search-dropdown{
+                width:200px;
+            }
+            h1{
+                font-size:22px;
+            }
+            .logo-img{
+                width:36px;
+                height:36px;
+            }
+            main {
+                margin-top: 56px;
+            }
+            .hero-title {
+                font-size: 30px;
+                letter-spacing:1px;
+            }
+            .hero-desc{
+                white-space:normal;
+                letter-spacing:0.5px;
+            }
+            .hero-tag{
+                font-size:13px;
+                padding:5px 13px;
+                bottom:16px;
+                right:16px;
+            }
+            .scroll-container {
+                padding: 40px 24px 32px;
+                gap: 20px;
+            }
+            .card {
+                flex: 0 0 165px;
+                height: 230px;
+            }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <header>
+        <div class="header‑brand">
+            <a href="https://www.meierstudios.com/" target="_blank" rel="noopener noreferrer">
+                <img src="https://www.meierstudios.com/forweb.ico" alt="Logo" class="logo-img">
+            </a>
+            <h1>Novels</h1>
+        </div>
+        <div class="header-right-group">
+            <div class="search-toggle-wrap" id="searchWrap">
+                <button class="search-circle-btn" id="searchTrigger">
+                    <svg class="search-icon-svg" viewBox="0 0 24 24">
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+                <div class="search-input-shell">
+                    <input type="text" id="searchInput" placeholder="Search within Meier Studios" autocomplete="off">
+                </div>
+                <div class="search-dropdown" id="searchPanel"></div>
+            </div>
+            <div class="lang-container">
+                <div class="earth-btn" id="earthToggle">
+                    <svg class="globe-icon" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M2 12h20"/>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1 -4 10 15.3 15.3 0 0 1 -4 -10 15.3 15.3 0 0 1 4 -10z"/>
+                    </svg>
+                </div>
+                <div class="lang-dropdown" id="langDrop">
+                    <div class="lang-menu-header">Select Language</div>
+                    <div class="lang-scroll-wrapper" id="langListContainer">
+                        <button class="lang-option" data-lang="en">English</button>
+                        <button class="lang-option" data-lang="de">Deutsch</button>
+                        <button class="lang-option" data-lang="fr">Français</button>
+                        <button class="lang-option" data-lang="es">Español</button>
+                        <button class="lang-option" data-lang="it">Italiano</button>
+                        <button class="lang-option" data-lang="pt">Português</button>
+                        <button class="lang-option" data-lang="ru">Русский</button>
+                        <button class="lang-option" data-lang="nl">Nederlands</button>
+                        <button class="lang-option" data-lang="sv">Svenska</button>
+                        <button class="lang-option" data-lang="da">Dansk</button>
+                        <button class="lang-option" data-lang="no">Norsk</button>
+                        <button class="lang-option" data-lang="fi">Suomi</button>
+                        <button class="lang-option" data-lang="pl">Polski</button>
+                        <button class="lang-option" data-lang="cs">Čeština</button>
+                        <button class="lang-option" data-lang="hu">Magyar</button>
+                        <button class="lang-option" data-lang="tr">Türkçe</button>
+                        <button class="lang-option" data-lang="ko">한국어</button>
+                        <button class="lang-option" data-lang="ja">日本語</button>
+                        <button class="lang-option" data-lang="zh-cn">简体中文</button>
+                        <button class="lang-option" data-lang="zh-tw">繁體中文</button>
+                    </div>
+                </div>
+            </div>
+            <button class="menu-btn" id="openSidebar">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+    <div class="sidebar‑overlay" id="overlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <button class="sidebar-close" id="closeSidebar">×</button>
+        <div class="sidebar-logo">
+            <img src="https://www.meierstudios.com/forweb.ico" alt="logo">
+            <span class="sidebar-logo-text">Meier Studios</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="/">Home</a></li>
+            <li><a href="/novels">Novels</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/news">News</a></li>
+            <li><a href="/smile‑support">Smile Support</a></li>
+        </ul>
+    </aside>
+    <main>
+        <a href="https://www.meierstudios.com/novels/rhetoric-monster-society/" class="hero-banner">
+            <img src="https://www.meierstudios.com/images/new-coming.png" alt="New Coming" class="hero-bg">
+            <div class="hero-gradient-mask"></div>
+            <div class="hero-tag">New Coming</div>
+            <div class="hero-text-wrap">
+                <h2 class="hero-title" id="heroTitle">The Rhetoric‑Monster Society</h2>
+                <p class="hero-desc" id="heroDesc">Where monsters master the language of their own power, truth itself becomes the ultimate force.</p>
+            </div>
+        </a>
+        <div class="scroll-container">
+            <a href="https://www.meierstudios.com/novels/rhetoric-monster-society/" class="card">
+                <div class="card-img-wrapper">
+                    <img src="https://www.meierstudios.com/images/newcomingcover.jpg" alt="Cover" class="card-img">
+                </div>
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <h3 class="card-title">The Rhetoric‑Monster Society</h3>
+                    <p class="card-sub">Monograph</p>
+                </div>
+            </a>
+            <a href="article2.html" class="card">
+                <div class="card-img-wrapper">
+                    <img src="https://www.meierstudios.com/images/whereistilldwell.jpeg" alt="Cover" class="card-img">
+                </div>
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <h3 class="card-title">Where I Still Dwell</h3>
+                    <p class="card-sub">Coming Soon</p>
+                </div>
+            </a>
+            <a href="article3.html" class="card">
+                <div class="card-img-wrapper">
+                    <img src="https://via.placeholder.com/400x600/555/fff?text=Cover+3" alt="Cover" class="card-img">
+                </div>
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <h3 class="card-title">Galaxy Chronicles</h3>
+                    <p class="card-sub">Sci‑Fi Series</p>
+                </div>
+            </a>
+            <a href="article4.html" class="card">
+                <div class="card-img-wrapper">
+                    <img src="https://via.placeholder.com/400x600/666/fff?text=Cover+4" alt="Cover" class="card-img">
+                </div>
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <h3 class="card-title">The Ancient Code</h3>
+                    <p class="card-sub">Historical Fiction</p>
+                </div>
+            </a>
+        </div>
+    </main>
+    <footer>
+        &copy; 2026 Meier Studios. All rights reserved.
+    </footer>
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const openBtn = document.getElementById('openSidebar');
+        const closeBtn = document.getElementById('closeSidebar');
+        function openSide(){
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+        }
+        function closeSide(){
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+        openBtn.addEventListener('click',openSide);
+        closeBtn.addEventListener('click',closeSide);
+        overlay.addEventListener('click',closeSide);
+        const searchDatabase = [
+            {title:"The Rhetoric‑Monster Society",url:"https://www.meierstudios.com/novels/rhetoric-monster-society/"},
+            {title:"Where I Still Dwell",url:"article2.html"},
+            {title:"Galaxy Chronicles",url:"article3.html"},
+            {title:"The Ancient Code",url:"article4.html"}
+        ];
+        const searchWrap = document.getElementById('searchWrap');
+        const searchTrigger = document.getElementById('searchTrigger');
+        const searchInput = document.getElementById('searchInput');
+        const searchPanel = document.getElementById('searchPanel');
+        function expandSearch(){
+            searchWrap.classList.add('open');
+            setTimeout(()=>searchInput.focus(),280);
+        }
+        function collapseSearch(){
+            searchWrap.classList.remove('open');
+            searchPanel.style.display = 'none';
+            searchInput.value = "";
+        }
+        searchTrigger.addEventListener('click',e=>{
+            e.stopPropagation();
+            if(searchWrap.classList.contains('open')){
+                collapseSearch();
+            }else{
+                expandSearch();
+            }
+        })
+        searchInput.addEventListener('input',()=>{
+            const keyword = searchInput.value.trim().toLowerCase();
+            searchPanel.innerHTML = "";
+            if(keyword.length === 0){
+                searchPanel.style.display="none";
+                return;
+            }
+            const result = searchDatabase.filter(item=> item.title.toLowerCase().includes(keyword));
+            searchPanel.style.display="block";
+            if(result.length === 0){
+                searchPanel.innerHTML = `<div class="search-noresult">No results</div>`;
+            }else{
+                result.forEach(item=>{
+                    const div = document.createElement('div');
+                    div.className = "search-item";
+                    div.innerText = item.title;
+                    div.onclick = ()=>{
+                        window.location.href = item.url;
+                        collapseSearch();
+                    }
+                    searchPanel.appendChild(div);
+                })
+            }
+        })
+        document.addEventListener('click',e=>{
+            if(!searchWrap.contains(e.target)){
+                collapseSearch();
+            }
+        })
+        const langData = {
+"zh-cn":{
+    "title":"5oCq5YW95L+u6L6e5a2m5Lya",
+    "desc":"5oCq5YW95a6M5YWo5o6M5o+h6Ieq6Lqr6IO95Yqb6K+t6KiA55qE5pe25YCZ77yM55yf55CG5pys6Lqr5L6/5oiQ5Li657uI5p6B5Yqb6YeP44CC"
+},
+"zh-tw":{
+    "title":"5oCq54245L+u6L6t5a245pyD",
+    "desc":"5oCq54245a6M5YWo5o6M5o+h6Ieq6Lqr6IO95Yqb6Kqe6KiA55qE5pmC5YCZ77yM55yf55CG5pys6Lqr5L6/5oiQ54K657WC5qW15Yqb6YeP44CC"
+},
+"en":{
+    "title":"VGhlIFJoZXRvcmlj4oCRTW9uc3RlciBTb2NpZXR5",
+    "desc":"V2hlcmUgbW9uc3RlcnMgbWFzdGVyIHRoZSBsYW5ndWFnZSBvZiB0aGVpciBvd24gcG93ZXIsIHRydXRoIGl0c2VsZiBiZWNvbWVzIHRoZSB1bHRpbWF0ZSBmb3JjZS4="
+},
+"de":{
+    "title":"RGllIFJoZXRvcmlr4oCRTW9uc3RlcuKAkUdlc2VsbHNjaGFmdA==",
+    "desc":"V2VubiBNb25zdGVyIGRpZSBTcHJhY2hlIGlocmVyIGVpZ2VuZW4gS3JhZnQgYmVoZXJyc2NoZW4sIHdpcmQgZGllIFdhaHJoZWl0IHNlbGJzdCB6dXIgdWx0aW1hdGl2ZW4gTWFjaHQu"
+},
+"fr":{
+    "title":"TGEgU29jacOpdMOpIGRlcyBNb25zdHJlcyBSaMOpdG9yaXF1ZQ==",
+    "desc":"UXVhbmQgbGVzIG1vbnN0cmVzIG1hw650cmlzZW50IGxlIGxhbmdhZ2UgZGUgbGV1ciBwcm9wcmUgcG91dm9pciwgbGEgdsOpcml0w6kgZGV2aWVudCBsYSBmb3JjZSBzdXByw6ptZS4="
+},
+"es":{
+    "title":"TGEgU29jaWVkYWQgZGUgTW9uc3RydW9zIFJldMOzcmljb3M=",
+    "desc":"Q3VhbmRvIGxvcyBtb25zdHJ1b3MgZG9taW5hbiBlbCBsZW5ndWFqZSBkZSBzdSBwcm9waW8gcG9kZXIsIGxhIHZlcmRhZCBzZSBjb252aWVydGUgZW4gbGEgZnVlcnphIGRlZmluaXRpdmEu"
+},
+"it":{
+    "title":"TGEgU29jaWV0w6AgZGVpIE1vc3RyaSBSZXRvcmljaQ==",
+    "desc":"UXVhbmRvIGkgbW9zdHJpIHBhZHJvbmVnZ2lhbm8gaWwgbGluZ3VhZ2dpbyBkZWwgcHJvcHJpbyBwb3RlcmUsIGxhIHZlcml0w6AgZGl2ZW50YSBsYSBmb3J6YSBzdXByZW1hLg=="
+},
+"pt":{
+    "title":"QSBTb2NpZWRhZGUgZG9zIE1vbnN0cm9zIFJldMOzcmljb3M=",
+    "desc":"UXVhbmRvIG1vbnN0cm9zIGRvbWluYW0gYSBsaW5ndWFnZW0gZG8gc2V1IHByw7NwcmlvIHBvZGVyLCBhIHByw7NwcmlhIHZlcmRhZGUgc2UgdG9ybmEgYSBmb3LDp2Egc3VwcmVtYS4="
+},
+"ru":{
+    "title":"0J7QsdGJ0LXRgdGC0LLQviDQoNC40YLQvtGA0LjRh9C10YHQutC40YUg0JzQvtC90YHRgtGA0L7Qsg==",
+    "desc":"0JrQvtCz0LTQsCDQvNC+0L3RgdGC0YDRiyDQvtCy0LvQsNC00LXQstCw0Y7RgiDRj9C30YvQutC+0Lwg0YHQvtCx0YHRgtCy0LXQvdC90L7QuSDRgdC40LvRiywg0YHQsNC80LAg0LjRgdGC0LjQvdCwINGB0YLQsNC90L7QstC40YLRgdGPINCy0YvRgdGI0LXQuSDRgdC40LvQvtC5Lg=="
+},
+"nl":{
+    "title":"RGUgUmV0b3Jpc2NoZeKAkU1vbnN0ZXLigJFWZXJlbmlnaW5n",
+    "desc":"V2FubmVlciBtb25zdGVycyBkZSB0YWFsIHZhbiBodW4gZWlnZW4ga3JhY2h0IGJlaGVlcnNlbiwgd29yZHQgZGUgd2FhcmhlaWQgemVsZiBkZSB1bHRpZW1lIG1hY2h0Lg=="
+},
+"sv":{
+    "title":"UmV0b3LigJFNb25zdGVy4oCRU8OkbGxza2FwZXQ=",
+    "desc":"TsOkciBtb25zdGVyIGJlaMOkcnNrYXIgc3Byw6VrZXQgZsO2ciBzaW4gZWdlbiBrcmFmdCBibGlyIHNhbm5pbmdlbiBkZW4gc2x1dGdpbHRpZ2Egc3R5cmthbi4="
+},
+"da":{
+    "title":"RGV0IFJldG9yaXNrZeKAkU1vbnN0ZXLigJFTZWxza2Fi",
+    "desc":"TsOlciBtZXN0cmUgYmVoZXJza2VyIHNwcm9nZXQgZm9yIGRlcmVzIGVnZW4ga3JhZnQsIGJsaXZlciBzYW5kaGVkZW4gZGVuIHVsdGltYXRpdmUgc3R5cmtlLg=="
+},
+"no":{
+    "title":"RGV0IFJldG9yaXNrZeKAkU1vbnN0ZXLigJFTZWxza2Fw",
+    "desc":"TsOlciBtb25zdHJlIGJlaGVyc2tlciBzcHLDpWtldCB0aWwgc2luIGVnZW4ga3JhZnQsIGJsaXIgc2FubmhldGVuIGRlbiB1bHRpbWF0ZSBzdHlya2VuLg=="
+},
+"fi":{
+    "title":"UmV0b3JpbmVu4oCRSGlydmnDtuKAkVloZGlzdHlz",
+    "desc":"S3VuIGhpcnZpw7Z0IGhhbGxpdHNldmF0IG9tYW4gdm9pbWFuc2Ega2llbGVuLCB0b3R1dWRlc3RhIGl0c2VzdMOkw6RuIHR1bGVlIGxvcHVsbGluZW4gdm9pbWEu"
+},
+"pl":{
+    "title":"U3Rvd2FyenlzemVuaWUgUmV0b3J5Y3pueWNoIFBvdHdvcsOzdw==",
+    "desc":"R2R5IHBvdHdvcnkgb3BhbnVqxIUgasSZenlrIHfFgmFzbmVqIG1vY3ksIHNhbWEgcHJhd2RhIHN0YWplIHNpxJkgb3N0YXRlY3puxIUgc2nFgsSFLg=="
+},
+"cs":{
+    "title":"U3BvbGXEjW5vc3QgUsOpdG9yaWNrw71jaCBQxZnDrcWhZXI=",
+    "desc":"S2R5xb4gcMWZw63FoWVyeSBvdmzDoWRub3UgamF6eWsgc3bDqSB2bGFzdG7DrSBzw61seSwgc3RhbmUgc2UgcHJhdmRhIHNhbWEga29uZcSNbm91IHNpbG91Lg=="
+},
+"hu":{
+    "title":"UmV0b3Jpa3Vz4oCRU3rDtnJueWVrIFTDoXJzYXPDoWdh",
+    "desc":"QW1pa29yIGEgc3rDtnJueWVrIGVsc2Fqw6F0w610asOhayBzYWrDoXQgZXJlasO8ayBueWVsdsOpdCwgYXogaWdhenPDoWcgbWFnYSBsZXN6IGEgdsOpZ3PFkSBoYXRhbG9tLg=="
+},
+"tr":{
+    "title":"UmV0b3Jpa+KAkUNhbmF2YXJsYXIgRGVybmXEn2k=",
+    "desc":"Q2FuYXZhcmxhciBrZW5kaSBnw7zDp2xlcmluaW4gZGlsaW5pIMO2xJ9yZW5kacSfaSB6YW1hbiwgZ2Vyw6dlxJ9pbiBrZW5kaXNpIGVuIMO8c3TDvG4gZ8O8w6cgb2x1ci4="
+},
+"ko":{
+    "title":"7IiY7IKs7ZWZIOq0tOusvCDtmJHtmow=",
+    "desc":"6rS066y87J20IOyekOyLoCDriqXroKXsnZgg7Ja47Ja066W8IOyZhOyghO2eiCDri6Tro7Ag65WMIOynhOumrCDsnpDssrTqsIAg6raB6re57J2YIO2emOydtCDrkJzri6Qu"
+},
+"ja":{
+    "title":"44Os44OI44Oq44OD44Kv44O744Oi44Oz44K544K/44O85Y2U5Lya",
+    "desc":"5oCq54mp44GM6Ieq6Lqr44Gu5Yqb44Gu6KiA6JGJ44KS5a6M5YWo44Gr5o6M5o+h44GX44Gf5pmC44CB55yf55CG44Gd44Gu44KC44Gu44GM56m25qW144Gu5Yqb44Go44Gq44KL44CC"
+}
+        };
+        const earthBtn = document.getElementById('earthToggle');
+        const langDrop = document.getElementById('langDrop');
+        const langListContainer = document.getElementById('langListContainer');
+        const heroTitle = document.getElementById('heroTitle');
+        const heroDesc = document.getElementById('heroDesc');
+        let menuOpen = false;
+        function b64DecodeUnicode(str){
+            return decodeURIComponent(escape(atob(str)));
+        }
+        function renderLang(lang){
+            const d = langData[lang];
+            if(!d) return;
+            heroTitle.innerText = b64DecodeUnicode(d.title);
+            heroDesc.innerText = b64DecodeUnicode(d.desc);
+        }
+        function openLangMenu() {
+            menuOpen = true;
+            langDrop.classList.remove("close-animation");
+            langDrop.classList.add("open");
+        }
+        function closeLangMenu() {
+            if (!menuOpen) return;
+            menuOpen = false;
+            langDrop.classList.remove("open");
+            langDrop.classList.add("close-animation");
+            setTimeout(() => {
+                langDrop.classList.remove("close-animation");
+            }, 320);
+        }
+        earthBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuOpen ? closeLangMenu() : openLangMenu();
+        });
+        langListContainer.addEventListener('click', (e) => {
+            const selectedBtn = e.target.closest('.lang-option');
+            if (!selectedBtn) return;
+            const selectedLang = selectedBtn.getAttribute('data-lang');
+            renderLang(selectedLang);
+            closeLangMenu();
+        });
+        document.addEventListener('click', () => {
+            closeLangMenu();
+        });
+        langDrop.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+        renderLang("en");
+    </script>
+</body>
+</html>
